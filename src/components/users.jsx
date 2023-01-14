@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import api from "../api";
-import { tableLabel } from "./message";
 
 //import PhraseCounter from "./phrase_counter";
 
@@ -11,36 +10,26 @@ const Users = () => {
     setUsers(newArray);
   };
   const renderPhrase = (number) => {
-    if ((number>=2)&&(number<=4)){
+    if (number >= 2 && number <= 4) {
       return "чeловека тусанут";
     } else {
-      return "человек тусанет"; 
+      return "человек тусанет";
     }
   };
-   const renderUsers = () => {
-     return users.map((user) => (
-       <tr key={user._id}>
-         <td>{user.name}</td>
-         <td> {user.profession.name}</td>
-         <td className="character">
-           {user.qualities.map((quality) => (
-             <span key={quality._id} className={"badge bg-" + quality.color}>
-               {quality.name}
-             </span>
-           ))}
-         </td>
-         <td>{user.completedMeetings}</td>
-         <td> {user.rate}</td>
-         <td>
-           <button className="badge bg-danger" onClick={()=> handeleDelete(user._id)}>delete</button>
-         </td>
-       </tr>
-     ));
-   };
 
   return (
     <div>
-      {tableLabel(users,renderPhrase)}
+      <div
+        className={`badge mb-2 p-2 ${
+          users.length > 0 ? "bg-primary" : "bg-danger"
+        }`}
+      >
+        <h2>
+          {users.length > 0
+            ? `${users.length} ${renderPhrase(users.length)} с тобой сeгодня `
+            : " С тобой никто не тусанет сегдня"}
+        </h2>
+      </div>
       {users.length > 0 && (
         <table className="greenTable">
           <thead>
@@ -50,14 +39,40 @@ const Users = () => {
               <th scope="col">Качества</th>
               <th scope="col">Кол-во свиданий</th>
               <th scope="col">Оценка</th>
+              <th scope="col">Удалить из списка</th>
             </tr>
           </thead>
-          <tbody>{renderUsers()}</tbody>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td> {user.profession.name}</td>
+                <td className="character">
+                  {user.qualities.map((quality) => (
+                    <span
+                      key={quality._id}
+                      className={"badge bg-" + quality.color}
+                    >
+                      {quality.name}
+                    </span>
+                  ))}
+                </td>
+                <td>{user.completedMeetings}</td>
+                <td> {user.rate}</td>
+                <td>
+                  <button
+                    className="badge bg-danger"
+                    onClick={() => handeleDelete(user._id)}
+                  >
+                    delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       )}
     </div>
   );
-
-}
+};
 export default Users;
-
